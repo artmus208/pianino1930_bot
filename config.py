@@ -10,3 +10,5 @@ DB_PASS=environ.get("DB_PASS")
 TG_TOKEN=environ.get("TG_TOKEN")
 
 print(f"{DB_HOST=}")
+
+

@@ -1,7 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
-
+from datetime import datetime
 from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 
 
@@ -17,6 +17,7 @@ class Participant(Base):
     phone = Column(String(256))
     photo_id = Column(String(256))
     consent = Column(Boolean, default=False)
+    time_created = Column(DateTime, default=datetime.now())
 
 
 
