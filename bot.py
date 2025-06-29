@@ -55,20 +55,6 @@ async def get_phone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return CONSENT
 
-# async def get_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-#     photo = update.message.photo[-1]
-#     context.user_data['photo_id'] = photo.file_id
-
-#     consent_text = (
-#         "Прежде чем завершить регистрацию, пожалуйста подтвердите согласие:\n\n"
-#         "☑️ Я согласен(на) на обработку моих персональных данных (ФИО, возраст, рост, фото и телефон) "
-#         "для участия в массовке и их передачу организаторам съёмок. "
-#         "Данные будут храниться до окончания проекта. Я могу отозвать согласие в любой момент.\n\n"
-#         "Ответьте: «СОГЛАСЕН» или «НЕТ»."
-#     )
-#     await update.message.reply_text(consent_text)
-#     return CONSENT
-
 async def consent_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
