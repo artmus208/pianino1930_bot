@@ -8,7 +8,6 @@ from telegram.ext import (
 from models import Session, Participant
 from config import TG_TOKEN
 
-# NAME, AGE, HEIGHT, PHONE, PHOTO, CONSENT = range(6)
 NAME, AGE, HEIGHT, PHONE, CONSENT = range(5)
 CONSENT_TEXT = (
     "Прежде чем завершить регистрацию, пожалуйста подтвердите согласие:\n\n"
@@ -103,7 +102,6 @@ conv_handler = ConversationHandler(
         AGE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_age)],
         HEIGHT: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_height)],
         PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_phone)],
-        # PHOTO: [MessageHandler(filters.PHOTO, get_photo)],
     },
     fallbacks=[CommandHandler("cancel", cancel)],
 )
