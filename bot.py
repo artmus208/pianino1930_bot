@@ -73,15 +73,13 @@ async def consent_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session.add(participant)
         session.commit()
 
-        # from sheets import add_participant_to_sheet
-        # add_participant_to_sheet(
-        #     context.user_data['name'],
-        #     context.user_data['age'],
-        #     context.user_data['height'],
-        #     context.user_data['phone'],
-        #     context.user_data['photo_id'],
-        #     True,
-        # )
+        from sheets import add_participant_to_sheet
+        add_participant_to_sheet(
+            context.user_data['name'],
+            context.user_data['age'],
+            context.user_data['phone'],
+            True,
+        )
 
         await query.edit_message_text("✅ Спасибо! Ты записан на массовку.")
     else:
