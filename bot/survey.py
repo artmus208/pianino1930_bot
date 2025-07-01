@@ -3,55 +3,53 @@ from telegram import (
 )
 
 from telegram.ext import (
-    ContextTypes, ConversationHandler, ConversationHandler, CommandHandler,
+    ContextTypes, ConversationHandler, CommandHandler,
     MessageHandler, filters
 )
 
-NAME, AGE, HEIGHT, PHONE, CONSENT = range(5)
+from bot.utils import two_keyboard_buttons
+
+NAME, PHONE, STATUS, CHAR, CONSENT = range(5)
 
 CONSENT_TEXT = (
-    "Прежде чем завершить регистрацию, пожалуйста подтвердите согласие:\n\n"
-    "'☑️ Я согласен(на) на обработку моих персональных данных (ФИО, возраст, рост, и телефон) "
-    "для участия в массовке и их передачу организаторам съёмок. "
-    "Данные будут храниться до окончания проекта. Я могу отозвать согласие в любой момент.'\n\n"
-    "Ответьте: «ДА» или «НЕТ»."
+    "Прежде чем завершить регистрацию,"
+    "• пожалуйста подтвердите согласие:"
+    "'Я согласен(на) на обработку моих персональных данных (ФИО, номер телефона) для участия в проекте и их передачу организаторам съёмок."
+    "Данные будут храниться до окончания проекта."
+    "Ответьте: «ДА» или «НЕТ».'"
 )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет! Как тебя зовут?")
+    await update.message.reply_text("Здравствуйте! Пожалуйста, укажите Фамилию Имя Отчество. ")
     return NAME
 
 async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['name'] = update.message.text
-    await update.message.reply_text("Сколько тебе лет?")
-    return AGE
-
-async def get_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    context.user_data['age'] = update.message.text
-    await update.message.reply_text("Укажи свой рост (в см):")
-    return HEIGHT
-
-async def get_height(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    context.user_data['height'] = update.message.text
-    await update.message.reply_text("Твой номер телефона:")
+    await update.message.reply_text("Укажите свой номер телефона")
     return PHONE
 
 async def get_phone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['phone'] = update.message.text
+    await update.message.reply_text("Напишите свой статус: групповка или АМС")
+    return STATUS
 
-    keyboard = [
-        [
-            InlineKeyboardButton("✅ Да, я согласен", callback_data="consent_yes"),
-            InlineKeyboardButton("❌ Нет", callback_data="consent_no"),
-        ]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+async def get_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data['status'] = update.message.text
+    await update.message.reply_text("Укажите своего персонажа")
+    return CHAR
 
-    await update.message.reply_text(
-            CONSENT_TEXT,
-            reply_markup=reply_markup,
+async def get_char(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data['char'] = update.message.text
+
+    keyboard = two_keyboard_buttons(
+        ["✅ Да, я согласен", "❌ Нет"], 
+        ["consent_yes", "consent_no"]
     )
-
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        CONSENT_TEXT,
+        reply_markup=reply_markup,
+    )
     return CONSENT
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
