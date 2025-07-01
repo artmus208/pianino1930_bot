@@ -24,13 +24,12 @@ class Participant(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(256))
-    age = Column(Integer)
-    height = Column(Integer)
     phone = Column(String(256))
-    photo_id = Column(String(256))
+    status = Column(String(256))
+    char = Column(String(256))
+    telegram_id = Column(BigInteger)
     consent = Column(Boolean, default=False)
     time_created = Column(DateTime, default=datetime.now())
-    telegram_id = Column(BigInteger)
     confirmed = Column(
         Enum(ConfirmationStatus), 
         default=ConfirmationStatus.unknown
