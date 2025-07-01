@@ -4,7 +4,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Подключение к Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-credentials = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name("sustained-kit-464408-k7-5ae62e764216.json", scope)
 client = gspread.authorize(credentials)
 
 # Открываем таблицу по названию
