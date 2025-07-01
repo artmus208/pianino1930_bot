@@ -60,9 +60,9 @@ conv_handler = ConversationHandler(
     entry_points=[CommandHandler("start", start)],
     states={
         NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_name)],
-        AGE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_age)],
-        HEIGHT: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_height)],
         PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_phone)],
+        STATUS: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_status)],
+        CHAR: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_char)],
     },
     fallbacks=[CommandHandler("cancel", cancel)],
 )
