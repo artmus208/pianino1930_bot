@@ -1,10 +1,23 @@
-from sqlalchemy import BigInteger, create_engine, Column, Integer, String, Boolean, DateTime
+from datetime import datetime
+import enum
+
+from sqlalchemy import (
+    BigInteger, create_engine, Column, 
+    Integer, String, Boolean, DateTime,
+    Enum
+)
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
-from datetime import datetime
+
 from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 
 Base = declarative_base()
+
+class ConfirmationStatus(enum.Enum):
+    unknown = "unknown"
+    yes = "yes"
+    no = "no"
+
 
 class Participant(Base):
     __tablename__ = 'participants'
@@ -18,6 +31,10 @@ class Participant(Base):
     consent = Column(Boolean, default=False)
     time_created = Column(DateTime, default=datetime.now())
     telegram_id = Column(BigInteger)
+    confirmed = Column(
+        Enum(ConfirmationStatus), 
+        default=ConfirmationStatus.unknown
+    )
 
 
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
