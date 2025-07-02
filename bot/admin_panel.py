@@ -18,7 +18,7 @@ async def open_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     participants = session.query(Participant).all()
     total_pages = len(participants) // PAGE_SIZE
     # Сохраняем всех и обнуляем выбор
-    context.user_data['all_users'] = {str(p.id): p.name for p in participants}
+    context.user_data['all_users'] = {str(p.telegram_id): p.name for p in participants}
     context.user_data['selected_ids'] = set()
     context.user_data['current_page'] = 0
 
@@ -27,8 +27,8 @@ async def open_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for p in participants[:10]:
         keyboard.append([
             InlineKeyboardButton(
-                f"{p.name} {'✅' if str(p.id) in context.user_data['selected_ids'] else ''}",
-                callback_data=f"select_{p.id}"
+                f"{p.name} {'✅' if str(p.telegram_id) in context.user_data['selected_ids'] else ''}",
+                callback_data=f"select_{p.telegram_id}"
             )
         ])
     keyboard.append([InlineKeyboardButton("➡ Дальше", callback_data="next_page")])
@@ -126,7 +126,7 @@ async def send_custom_message(update: Update, context: ContextTypes.DEFAULT_TYPE
     selected_ids = context.user_data.get('selected_ids', set())
 
     session = Session()
-    participants = session.query(Participant).filter(Participant.id.in_(map(int, selected_ids))).all()
+    participants = session.query(Participant).filter(Participant.telegram_id.in_(map(int, selected_ids))).all()
 
     count = 0
     for p in participants:
