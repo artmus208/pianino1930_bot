@@ -11,5 +11,5 @@ client = gspread.authorize(credentials)
 spreadsheet = client.open("Участники массовки")
 sheet = spreadsheet.sheet1
 
-def add_participant_to_sheet(name, age, phone, consent):
-    sheet.append_row([name, str(age), phone, consent])
+def add_participant_to_sheet(name, phone, status, char, consent, time_created):
+    sheet.append_row([name, phone, status, char, consent, time_created])

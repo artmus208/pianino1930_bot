@@ -11,3 +11,4 @@ TG_TOKEN=environ.get("TG_TOKEN")
 TG_ADMINS=list(map(int, environ.get("TG_ADMINS").split(',')))
 
 print(f"{DB_HOST=}")
+print(f"{TG_ADMINS=}")

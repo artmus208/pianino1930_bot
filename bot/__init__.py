@@ -17,13 +17,9 @@ app.add_handler(CallbackQueryHandler(consent_callback, pattern="^consent_"))
 app.add_handler(CommandHandler("notify", notify_all))
 
 
-from .admin_panel import panel_conv, selection_callback
+from .admin_panel import panel_conv, send_one_handler
+
 
 app.add_handler(panel_conv)
-app.add_handler(
-    CallbackQueryHandler(
-        selection_callback,
-        pattern="^(select_|finish_selection|next_page)" 
-    )
-)
+app.add_handler(send_one_handler)
 
