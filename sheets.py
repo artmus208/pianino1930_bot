@@ -18,24 +18,23 @@ def add_participant_to_sheet(name, phone, status, char, consent, time_created):
     sheet.append_row([name, phone, status, char, consent, time_created])
 
 
-def create_new_sheet():
-    d = datetime.now()
-    d += timedelta(days=1)
-    str_d = d.date().isoformat()
-    new_sheet_title = f"Вызов {str_d}"
+def create_new_sheet(sheet_title):
     sheet_names = [s.title for s in spreadsheet.worksheets()]
     sheet = None
-    if new_sheet_title not in sheet_names:
+    if sheet_title not in sheet_names:
         sheet = spreadsheet.add_worksheet(
-            title=new_sheet_title, 
+            title=sheet_title, 
             rows=100, 
             cols=100
         )
     else:
-        sheet = spreadsheet.worksheet(f"Вызов {str_d}")
+        sheet = spreadsheet.worksheet(f"Вызов {sheet_title}")
         print("На этот день лист уже создан")
         
     return sheet
+
+def get_sheet_by_title(title: str):
+    return spreadsheet.worksheet(title)
 
 
 def insert_in_certain_sheet(sheet, name, phone, status, char, consent, time_created):
