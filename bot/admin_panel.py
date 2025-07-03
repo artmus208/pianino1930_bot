@@ -1,5 +1,4 @@
-
-
+#! bot/admin_panel.py
 import traceback
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
@@ -10,7 +9,7 @@ from telegram.ext import (
 from .utils import admin_only, make_sheet_title
 from models import Session, Participant
 from sheets import create_new_sheet
-from bot.collbacks import confirm_callback
+from bot.callbacks import confirm_callback
 
 PAGE_SIZE = 10
 

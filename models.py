@@ -1,3 +1,4 @@
+#! models.py
 from datetime import datetime
 import enum
 
@@ -27,7 +28,7 @@ class Participant(Base):
     phone = Column(String(256))
     status = Column(String(256))
     char = Column(String(256))
-    telegram_id = Column(BigInteger)
+    telegram_id = Column(BigInteger, unique=True)
     consent = Column(Boolean, default=False)
     time_created = Column(DateTime, default=datetime.now())
     confirmed = Column(

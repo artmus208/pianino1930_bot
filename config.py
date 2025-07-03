@@ -1,3 +1,4 @@
+#! config.py
 from os import environ
 from dotenv import load_dotenv
 load_dotenv("./envs/artmus_bot.env")
