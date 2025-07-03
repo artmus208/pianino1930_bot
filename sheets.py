@@ -28,7 +28,7 @@ def create_new_sheet(sheet_title):
             cols=100
         )
     else:
-        sheet = spreadsheet.worksheet(f"Вызов {sheet_title}")
+        sheet = spreadsheet.worksheet(sheet_title)
         print("На этот день лист уже создан")
         
     return sheet
