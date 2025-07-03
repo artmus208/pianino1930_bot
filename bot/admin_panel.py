@@ -6,7 +6,7 @@ from telegram.ext import (
     CallbackQueryHandler
 )
 
-from .utils import admin_only
+from .utils import admin_only, make_sheet_title
 from models import Session, Participant
 from sheets import create_new_sheet
 
@@ -133,10 +133,15 @@ async def send_confirm_message(update: Update, context: ContextTypes.DEFAULT_TYP
     keyboard = []
     for p in participants:
         keyboard.append([
-            
+            InlineKeyboardButton("✅ Подтверждаю", collback_data="confirm_yes"),
+            InlineKeyboardButton("❌ Не подтверждаю", collback_data="confirm_no")
         ])
         try:
-            await context.bot.send_message(chat_id=p.telegram_id, text=message_text)
+            await context.bot.send_message(
+                chat_id=p.telegram_id, 
+                text=message_text,
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
             count += 1
         except Exception as e:
             print(f"❌ Ошибка: {e}")
@@ -144,10 +149,14 @@ async def send_confirm_message(update: Update, context: ContextTypes.DEFAULT_TYP
     await update.message.reply_text(f"✅ Сообщение отправлено {count} участникам.")
     
     try:
-        create_new_sheet()
-        await update.message.reply_text(f"✅ В таблице создан новый лист под очередной вызов")
+        sheet_title = make_sheet_title()
+        create_new_sheet(sheet_title)
+        context.user_data["sheet_title"] = sheet_title 
+        await update.message.reply_text(
+            f"✅ В таблице создан новый лист под очередной вызов. Название листа: {sheet_title}"
+        )
     except:
-        await update.message.reply_text(f"❌ Ошибка создания листа ")
+        await update.message.reply_text(f"❌ Ошибка создания листа")
 
     return ConversationHandler.END
 
