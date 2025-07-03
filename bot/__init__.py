@@ -22,4 +22,5 @@ from .admin_panel import panel_conv, send_one_handler
 
 app.add_handler(panel_conv)
 app.add_handler(send_one_handler)
+app.add_handler(CallbackQueryHandler(confirm_callback, pattern="^(confirm_yes|confirm_no)"))
 
