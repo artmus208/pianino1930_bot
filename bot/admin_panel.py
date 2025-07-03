@@ -1,5 +1,6 @@
 
 
+import traceback
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     ContextTypes, ConversationHandler, CommandHandler, MessageHandler, filters,
@@ -159,7 +160,9 @@ async def send_confirm_message(update: Update, context: ContextTypes.DEFAULT_TYP
         return "WAITING_CONFIRM"
     
     except:
-        await update.message.reply_text(f"❌ Ошибка создания листа")
+        error_message = traceback.format_exc()
+        last_line = error_message.strip().split('\n')[-1]
+        await update.message.reply_text(f"❌ Ошибка создания листа \n({last_line})")
         return ConversationHandler.END
 
 
