@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from functools import wraps
 from telegram import (
     InlineKeyboardMarkup, InlineKeyboardButton, Update
@@ -5,6 +6,13 @@ from telegram import (
 from telegram.ext import ContextTypes
 
 from config import TG_ADMINS
+
+def make_sheet_title():
+    d = datetime.now()
+    d += timedelta(days=1)
+    str_d = d.date().isoformat()
+    sheet_title = f"Вызов {str_d}"
+    return sheet_title
 
 def two_keyboard_buttons(btn_titles:list[str], cbk_datas:list[str]):
     keyboard = [
