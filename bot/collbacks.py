@@ -43,4 +43,17 @@ async def consent_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 
+async def confirm_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    session = Session()
+    selected_ids = context.user_data.get('selected_ids', set())
+    if query.data == "confrm_yes":
+        yes_participants = session.query(Participant).filter(
+            Participant.confirmed.in_([ConfirmationStatus.no, ConfirmationStatus.yes]),
+            Participant.telegram_id.in_(selected_ids)
+        )
+        for y_p in yes_participants:
+            y_p.confirmed = ConfirmationStatus.yes
+        
 

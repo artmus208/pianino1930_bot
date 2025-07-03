@@ -8,6 +8,7 @@ from telegram.ext import (
 
 from .utils import admin_only
 from models import Session, Participant
+from sheets import create_new_sheet
 
 PAGE_SIZE = 10
 
@@ -121,7 +122,7 @@ async def selection_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await query.edit_message_text("✍ Введите сообщение для выбранных участников:")
         return "WAITING_MESSAGE"
 
-async def send_custom_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def send_confirm_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_text = update.message.text
     selected_ids = context.user_data.get('selected_ids', set())
 
@@ -129,7 +130,11 @@ async def send_custom_message(update: Update, context: ContextTypes.DEFAULT_TYPE
     participants = session.query(Participant).filter(Participant.telegram_id.in_(map(int, selected_ids))).all()
 
     count = 0
+    keyboard = []
     for p in participants:
+        keyboard.append([
+            
+        ])
         try:
             await context.bot.send_message(chat_id=p.telegram_id, text=message_text)
             count += 1
@@ -137,6 +142,13 @@ async def send_custom_message(update: Update, context: ContextTypes.DEFAULT_TYPE
             print(f"❌ Ошибка: {e}")
 
     await update.message.reply_text(f"✅ Сообщение отправлено {count} участникам.")
+    
+    try:
+        create_new_sheet()
+        await update.message.reply_text(f"✅ В таблице создан новый лист под очередной вызов")
+    except:
+        await update.message.reply_text(f"❌ Ошибка создания листа ")
+
     return ConversationHandler.END
 
 
@@ -163,7 +175,7 @@ panel_conv = ConversationHandler(
             CallbackQueryHandler(selection_callback, pattern="^(select_|finish_selection|next_page|prev_page)")
         ],
         "WAITING_MESSAGE": [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, send_custom_message)
+            MessageHandler(filters.TEXT & ~filters.COMMAND, send_confirm_message)
         ],
     },
     fallbacks=[]

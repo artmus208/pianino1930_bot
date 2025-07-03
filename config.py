@@ -14,4 +14,4 @@ GOOGLE_SPREADSHEET_NAME=environ.get("GOOGLE_SPREADSHEET_NAME")
 
 print(f"{DB_HOST=}")
 print(f"{TG_ADMINS=}")
-print(f"{GOOGLE_CREDITINALS_JSON=}")
+print(f"In config: {GOOGLE_CREDITINALS_JSON=}")
