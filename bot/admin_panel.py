@@ -9,6 +9,7 @@ from telegram.ext import (
 from .utils import admin_only, make_sheet_title
 from models import Session, Participant
 from sheets import create_new_sheet
+from bot.collbacks import confirm_callback
 
 PAGE_SIZE = 10
 
@@ -133,8 +134,8 @@ async def send_confirm_message(update: Update, context: ContextTypes.DEFAULT_TYP
     keyboard = []
     for p in participants:
         keyboard.append([
-            InlineKeyboardButton("✅ Подтверждаю", collback_data="confirm_yes"),
-            InlineKeyboardButton("❌ Не подтверждаю", collback_data="confirm_no")
+            InlineKeyboardButton("✅ Подтверждаю", callback_data="confirm_yes"),
+            InlineKeyboardButton("❌ Не подтверждаю", callback_data="confirm_no")
         ])
         try:
             await context.bot.send_message(
@@ -155,10 +156,11 @@ async def send_confirm_message(update: Update, context: ContextTypes.DEFAULT_TYP
         await update.message.reply_text(
             f"✅ В таблице создан новый лист под очередной вызов. Название листа: {sheet_title}"
         )
+        return "WAITING_CONFIRM"
+    
     except:
         await update.message.reply_text(f"❌ Ошибка создания листа")
-
-    return ConversationHandler.END
+        return ConversationHandler.END
 
 
 async def send_to_one(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -186,6 +188,9 @@ panel_conv = ConversationHandler(
         "WAITING_MESSAGE": [
             MessageHandler(filters.TEXT & ~filters.COMMAND, send_confirm_message)
         ],
+        "WAITING_CONFIRM": [
+            CallbackQueryHandler(confirm_callback, pattern="^(confirm_yes|confirm_no)")
+        ]
     },
     fallbacks=[]
 )

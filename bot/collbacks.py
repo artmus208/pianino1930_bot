@@ -3,6 +3,7 @@ from datetime import datetime
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes, ConversationHandler
 from models import Session, Participant, ConfirmationStatus
+from sheets import insert_in_certain_sheet, get_sheet_by_title
 
 
 async def consent_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -48,6 +49,7 @@ async def confirm_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     session = Session()
     selected_ids = context.user_data.get('selected_ids', set())
+    sheet_title = context.user_data.get('sheet_title')
     if query.data == "confrm_yes":
         yes_participants = session.query(Participant).filter(
             Participant.confirmed.in_([ConfirmationStatus.no, ConfirmationStatus.yes]),
@@ -55,5 +57,14 @@ async def confirm_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         for y_p in yes_participants:
             y_p.confirmed = ConfirmationStatus.yes
-        
+
+        sheet = get_sheet_by_title(sheet_title)        
+        insert_in_certain_sheet(sheet)
+
+    elif query.data == "confirm_no":
+        await query.edit_message_text("❗ Обязательно предупредите бригадира.")
+
+    return ConversationHandler.END
+
+
 
